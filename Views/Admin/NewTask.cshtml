@@ -1,0 +1,149 @@
+﻿@model AdminPortal.Models.Lists.TaskUploads;
+@{
+    ViewData["Title"] = "Schedule new task";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    string path = ViewData["program_dir"].ToString();
+    string[,] cmdtemp = new string[3, 2];
+    cmdtemp[0, 0] = "reboot device";
+    cmdtemp[0, 1] = "reboot";
+    cmdtemp[1, 0] = "run script <...>";
+    cmdtemp[1, 1] = "." + path + "<script name>";
+    cmdtemp[2, 0] = "copy file <...>";
+    cmdtemp[2, 1] = "cp " + path + "<file name> <new path/file name>";
+
+    string[] st = new string[3];
+    st[0] = "Upload files(s)";
+    st[1] = "Upload files(s) and execute 1 command";
+    st[2] = "Execute command(s)";
+    IEnumerable<string> ie = st;
+    string sn1 = ViewData["sn"].ToString();
+}
+
+
+
+
+    <!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Schedule new task"</title>
+</head>
+<body>
+    @if (sn1.Contains(":"))
+    {
+        <h4>Schedule new task for "@ViewData["sn"]"</h4>
+    }
+    else
+    {
+        <h4>Schedule multiple tasks"</h4>
+    }
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form onsubmit="return validateMyForm();" asp-controller="Admin" asp-action="NewTask" method="post" enctype="multipart/form-data">
+
+
+
+                <div class="form-group">
+                    <label for="type">Select task action:</label>
+                    @Html.DropDownList("ttype", new SelectList(ie, st[0]), null, new { @class = "form-control" })
+                </div>
+
+                <label for="commands1">Commands to be executed (per line):</label>
+                <div class="form-group">
+                    @Html.TextArea("tcommands", null, new { @class = "form-control" })
+                </div>
+                <label for="sel1">Command templates:</label>
+                <select class="form-control" id="templates">
+                    <option>@cmdtemp[0, 0]</option>
+                    <option>@cmdtemp[1, 0]</option>
+                    <option>@cmdtemp[2, 0]</option>
+                </select>
+
+                <div style="display: none;">
+                    @Html.TextArea("sn", sn1, new { @class = "form-control" })
+                    <select class="form-control" id="templates2">
+                        <option>@cmdtemp[0, 1]</option>
+                        <option>@cmdtemp[1, 1]</option>
+                        <option>@cmdtemp[2, 1]</option>
+                    </select>
+                </div>
+
+                <button type="button" class="btn btn-outline-info" onclick="AddTemplate()">Add</button>
+
+                <div class="form-group">
+                    <label for="comment">Files to be uploaded (max 10MB total size):</label>
+                    <input type="file" name="file" multiple="multiple" />
+                </div>
+
+                <label for="location">Files target location:</label>
+                <div class="form-group">
+                    @Html.TextArea("location", path, new { @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Apply" class="btn btn-primary" />
+                </div>
+                <br>
+
+            </form>
+
+
+        </div>
+    </div>
+
+    <div>
+        <button onclick="goBack()">Go Back</button>
+
+        <script>
+            function goBack() {
+                window.history.back();
+            }
+        </script>
+    </div>
+
+    <script>
+        function validateMyForm() {
+            var com_text = document.getElementById("tcommands").value;
+            //alert(document.getElementById("ttype").selectedIndex);
+            if ((com_text == "") && (document.getElementById("ttype").selectedIndex == 2)) {
+                alert("Error! Please type at least one command.");
+                return false;
+            }
+
+            if ((com_text != "") && (document.getElementById("ttype").selectedIndex == 0)) {
+                if (confirm('Attention! Entered command(s) will be ignored for selected action. Do you want to continue?')) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            if ((com_text.includes("\n")) && (document.getElementById("ttype").selectedIndex == 1)) {
+                //alert(document.getElementById("ttype").selectedIndex);
+                if (confirm('Attention! Only one command (one line) is accepted for selected action. Other commands will be ignored. Do you want to continue?')) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            return true;
+
+        }
+
+        function AddTemplate() {
+            var com_text = document.getElementById("tcommands").value;
+            var ind = document.getElementById("templates").selectedIndex;
+            var x = document.getElementById('templates2');
+            if (com_text == "") {
+                document.getElementById("tcommands").value = com_text + x[ind].value;
+            } else {
+                document.getElementById("tcommands").value = com_text + "\n" + x[ind].value;
+            }
+        }
+
+    </script>
+</body>
+</html>

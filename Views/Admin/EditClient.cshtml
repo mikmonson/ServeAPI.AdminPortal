@@ -1,0 +1,130 @@
+﻿@model AdminPortal.Models.Client
+
+@{
+    ViewData["Title"] = "Details of client @Model.hostname";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    bool admin = Convert.ToBoolean(ViewData["admin"]);
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EditClient</title>
+</head>
+<body>
+
+<h4>Client details</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditClient">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="sn" />
+            <div class="form-group">
+                <label asp-for="mac" class="control-label"></label>
+                <input asp-for="mac" class="form-control" />
+                <span asp-validation-for="mac" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="model" class="control-label"></label>
+                <input asp-for="model" class="form-control" />
+                <span asp-validation-for="model" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="hostname" class="control-label"></label>
+                <input asp-for="hostname" class="form-control" />
+                <span asp-validation-for="hostname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="location" class="control-label"></label>
+                <input asp-for="location" class="form-control" />
+                <span asp-validation-for="location" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <a><b>Настройки устройства:</b></a>
+                <input type="hidden" asp-for="customer_id" class="form-control" />
+                <span asp-validation-for="customer_id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="servapi_host" class="control-label"></label>
+                <input asp-for="servapi_host" class="form-control" />
+                <span asp-validation-for="servapi_host" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="servapi_port" class="control-label"></label>
+                <input asp-for="servapi_port" class="form-control" />
+                <span asp-validation-for="servapi_port" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="provisioned" class="form-control" />
+                <span asp-validation-for="provisioned" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ssh_enabled" class="control-label">SSH Enabled (yes/no/auto)</label>
+                <input asp-for="ssh_enabled" class="form-control" />
+                <span asp-validation-for="ssh_enabled" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="type" class="control-label"></label>
+                <input asp-for="type" class="form-control" />
+                <span asp-validation-for="type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="client_update_freq" class="control-label"></label>
+                <input asp-for="client_update_freq" class="form-control" />
+                <span asp-validation-for="client_update_freq" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="program_update_freq" class="control-label"></label>
+                <input asp-for="program_update_freq" class="form-control" />
+                <span asp-validation-for="program_update_freq" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="client_version" class="control-label"></label>
+                <input asp-for="client_version" class="form-control" />
+                <span asp-validation-for="client_version" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="program_dir" class="control-label"></label>
+                <input asp-for="program_dir" class="form-control" />
+                <span asp-validation-for="program_dir" class="text-danger"></span>
+            </div>
+            @if (admin == true)
+            {
+        <div class="form-group">
+            <label asp-for="ssh_command" class="control-label">SSH tunneling command:</label>
+            <input asp-for="ssh_command" class="form-control" />
+            <span asp-validation-for="ssh_command" class="text-danger"></span>
+        </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <input asp-for="ssh_command" type="hidden" class="form-control" />
+                    <span asp-validation-for="ssh_command" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group">
+                <input type="hidden" asp-for="lastseenonline" class="form-control" />
+                <span asp-validation-for="lastseenonline" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="status" class="form-control" />
+                <span asp-validation-for="status" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a href="~/Admin/Client?id=@Model.sn">Back</a>
+</div>
+
+</body>
+</html>

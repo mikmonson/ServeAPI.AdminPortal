@@ -1,0 +1,22 @@
+﻿@model string
+@{
+    ViewData["Title"] = "Error - operation couldn't be completed";
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Error occurred</title>
+</head>
+<body>
+    <h3>@ViewData["error"].ToString()</h3>
+    <br>
+    <button onclick="goBack()">Go Back</button>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

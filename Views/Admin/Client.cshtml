@@ -1,0 +1,333 @@
+﻿@model AdminPortal.Models.Complex.ClientCollection
+@{
+    ViewData["Title"] = "Details of client @Model.hostname";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    int tcount = 0;
+    string fd = "\"" + @Model.myclient.sn + "\"";
+    bool admin = Convert.ToBoolean(ViewData["admin"]);
+}
+<script>
+    function Delete(sn) {
+        if (confirm("This action will delete client with identifier " + sn + " and all its data (tasks, metrics, logs, files). Are you sure you want to continue?") == true) {
+            window.location.href = "Delete?sn=" + sn;
+        }
+    }
+
+</script>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Details of client @Model.myclient.hostname</title>
+
+</head>
+<body>
+    <h3>Details of client "@Model.myclient.hostname"</h3>
+    <table>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.myclient.hostname)</th>
+            <td>   </td>
+            <td>@Model.myclient.hostname</td>
+
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.myclient.sn) </th>
+            <td>   </td>
+            <td>@Model.myclient.sn</td>
+
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.myclient.location) </th>
+            <td>   </td>
+            <td>@Model.myclient.location</td>
+
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.myclient.model)</th>
+            <td>   </td>
+            <td>@Model.myclient.model</td>
+
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.myclient.status) </th>
+            <td>   </td>
+            <td>@Model.myclient.status</td>
+
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.myclient.type) </th>
+            <td>   </td>
+            <td>@Model.myclient.type</td>
+
+        </tr>
+        @if (admin == true)
+        {
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.myclient.customer_id)</th>
+            <td>   </td>
+            <td>@Model.myclient.customer_id</td>
+
+        </tr>
+        }
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.myclient.mac) </th>
+            <td>   </td>
+            <td>@Model.myclient.mac</td>
+
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.myclient.servapi_host) </th>
+            <td>   </td>
+            <td>@Model.myclient.servapi_host</td>
+
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.myclient.servapi_port)</th>
+            <td>   </td>
+            <td>@Model.myclient.servapi_port</td>
+
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.myclient.ssh_enabled) </th>
+            <td>   </td>
+            <td>@Model.myclient.ssh_enabled</td>
+
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.myclient.ssh_command) </th>
+            <td>   </td>
+            <td>@Model.myclient.ssh_command</td>
+
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.myclient.program_dir) </th>
+            <td>   </td>
+            <td>@Model.myclient.program_dir</td>
+
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.myclient.client_update_freq) </th>
+            <td>   </td>
+            <td>@Model.myclient.client_update_freq</td>
+
+        </tr>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.myclient.program_update_freq) </th>
+            <td>   </td>
+            <td>@Model.myclient.program_update_freq</td>
+
+        </tr>
+    </table>
+    <br>
+    @if (Model.myclient.status == "provisioned")
+    {
+        <a href="GetFile?sn=@Model.myclient.sn" class="btn btn-info" role="button">Provisioning archive</a>
+    }
+    else
+    {
+        <a href="~/Admin/EditClient?id=@Model.myclient.sn" class="btn btn-danger" role="button">Settings</a>
+    }
+        <a href="~/Admin/NewTask?id=@Model.myclient.sn" class="btn btn-danger" role="button">New Task</a>
+        <button type="button" class="btn btn-danger" onclick="Delete(@fd)">Delete</button>
+
+        <br><br>
+        <h3>Tasks of client "@Model.myclient.hostname"</h3>
+
+
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Timestamp
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Files
+                    </th>
+                    <th>
+                        Commands
+                    </th>
+                    <th>Info</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @for (int n = Model.mytasks.Count - 1; n >= 0; n--)
+                {
+                    var item = Model.mytasks[n];
+                    tcount = tcount + 1;
+                    if (tcount > 5) break;
+                    string ref1 = null;
+                    string ref2 = null;
+                    string ref4 = "";
+                    if (item.client_log_id > 0) ref1 = "Log?taskid=" + item.id;
+                    if (item.result_file > 0) ref2 = "Data?id=" + item.result_file;
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.timestamp)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item._type_simple)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.status)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item._commands)
+                            @if (item._files != null)
+                            {
+                                @foreach (var m in item._files._files)
+                                {
+                                    if (m != null)
+                                    {
+                                        string ref_5 = "Data?id=" + m.content_index;
+                                        <a href=@ref_5>@m.file_name</a>
+                                    }
+                                }
+                                if (item.direction == 1)
+                                {
+                                    <p> Target path: @item._files.location</p>}
+                            }
+                        </td>
+                        <td>
+                            @if (item._commands != null)
+                            {
+                                @foreach (var m in item._commands._commands)
+                                {
+                                    if (m != null) ref4 = ref4 + m.command + " ";
+                                }
+                            }
+                            @ref4
+                        </td>
+                        <td>
+                            @if (ref1 != null)
+                            {
+                                <a href=@ref1>Log</a>
+                            }
+                            @if (ref2 != null)
+                            {
+                                <a href=@ref2>Result</a>
+                            }
+                        </td>
+                        <td>
+                            @if ((item.status != "completed") && (item.status != "canceled"))
+                            {
+                                if ((item.direction == 2) && (item.status == "pending")) // for upload we call it "acknowledge"
+                                {
+                                    <a asp-action="Cancel" asp-route-id="@item.id">Acknowledge</a>
+                                }
+                                else
+                                {
+                                <a asp-action="Cancel" asp-route-id="@item.id">Cancel</a>
+                                }
+                            }
+                            else if ((item.status == "canceled") || (item.status == "completed"))
+                            {
+                                <a href="~/Admin/Delete?task_id=@item.id">Delete</a>
+                            }
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+        @if (tcount > 5)
+        {
+            <p>More...</p>
+            <a href="~/Admin/Tasks?sn=@Model.myclient.sn" class="btn btn-info" role="button">See all tasks</a>
+        }
+
+
+        <br><br>
+        <h3>Metrics of client "@Model.myclient.hostname"</h3>
+
+        <table class="table">
+            <thead>
+                <tr>
+
+
+                    <td><b>Timestamp</td>
+                    <td><b>CPU load, %</td>
+                    <td><b>Memory load, %</td>
+                    <td><b>Free disk, MB</td>
+                    <td><b>Uptime, sec</td>
+                    <td><b>Last IP address</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                @{int mcount = 0;}
+                @for (int n = Model.mymetrics.Count - 1; n >= 0; n--)
+                {
+                    var metric = Model.mymetrics[n];
+                    mcount = mcount + 1;
+                    if (mcount > 5) break;
+                    <tr>
+                        <td> @metric.lastseenonline</td>
+                        <td> @metric.cpu</td>
+                        <td> @metric.memory</td>
+                        <td> @metric.free_disk</td>
+                        <td> @metric.uptime</td>
+                        <td> @metric.last_ip</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (mcount > 5)
+        {
+            <p>More...</p>
+            <a href="~/Admin/Metrics?sn=@Model.myclient.sn" class="btn btn-info" role="button">See all metrics</a>
+        }
+
+        <br>
+        <br>
+        <h3>Logs of client "@Model.myclient.hostname"</h3>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <td><b>Timestamp</td>
+                    <td><b>Title</td>
+                    <td><b>Message</td>
+                    <td><b>Task related</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                @{int lcount = 0;}
+                @for (int n = Model.mylog.Count - 1; n >= 0; n--)
+                {
+                    var log = Model.mylog[n];
+                    lcount = lcount + 1;
+                    if (lcount > 5) break;
+                    <tr>
+                        <td> @log.timestamp</td>
+                        <td> @log.title</td>
+                        <td> @log.message</td>
+                        @if (log.clienttask_id > 0)
+                        {
+                            <td> <a href="~/Admin/Tasks?id=@log.clienttask_id">Yes</a> </td>
+                        }
+                        else
+                        {
+                            <td>No</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (lcount > 5)
+        {
+            <p>More...</p>
+            <a href="~/Admin/Log?sn=@Model.myclient.sn" class="btn btn-info" role="button">See all logs</a>
+        }
+    </body>
+</html>

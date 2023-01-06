@@ -1,0 +1,30 @@
+﻿@model AdminPortal.Models.Lists.InfoParams
+@{
+    ViewData["Title"] = "Info";
+    string link = ViewData["link"].ToString();
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Info</title>
+</head>
+<body>
+    @if (link.Length>=2)
+    {
+    <p>@ViewData["logo"].ToString()</p>
+        <a href="@link">Download link</a>
+        <br />
+    }
+    else
+    {
+        <h3>@ViewData["logo"].ToString()</h3>
+    }
+    <br>
+
+
+    <a href="@ViewData["url"]" class="btn btn-info" role="button">OK</a>
+
+
+</body>
+</html>

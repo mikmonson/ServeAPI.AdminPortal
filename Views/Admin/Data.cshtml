@@ -1,0 +1,82 @@
+﻿@model IEnumerable<AdminPortal.Data.DataItem>
+
+@{
+    ViewData["Title"] = "Clients";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Data</title>
+</head>
+<body>
+
+    <h3>@ViewData["logo"]</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <td><b>File name</td>
+                <td><b>Content type</td>
+                <td><b>Device ID</td>
+                <td><b>Timestamp</td>
+                <td><b>Direction</td>
+                <td><b>Task related</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @{int lcount = 0;}
+            @foreach (var data in Model)
+            {
+                lcount = lcount + 1;
+
+            <tr>
+                <td> <a href="~/Admin/Data?id=@data.id">@data.file_name</a> </td>
+                <td> @data.content_type</td>
+                @if (data.sn.Contains(":"))
+                {
+                    string tr = "List: " + data.sn.Replace(":", ", ");
+                    <td> @tr</td>
+                }
+                else
+                {
+                    <td> @data.sn</td>
+                }
+                <td> @data.timestamp</td>
+                @if (data.tasktype == 1)
+                {
+                    <td>To Device</td>
+                }
+                else
+                {
+                    <td>From Device</td>
+
+                }
+
+                @if (data.task_id.Length > 0)
+                {
+                    if (data.task_id.Contains(":"))
+                    {
+                        <td>Multiple</td>
+                    }
+                    else
+                    {
+                        <td> <a href="~/Admin/Tasks?id=@data.task_id">Yes</a> </td>
+                    }
+                }
+                else
+                {
+                    <td>No</td>
+                }
+                <td> <a href="~/Admin/Delete?data_id=@data.id">Delete</a> </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+﻿@model IEnumerable<AdminPortal.Models.Client>
+
+@{
+    ViewData["Title"] = "Clients";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    string[] st = new string[4];
+    st[0] = "none";
+    st[1] = "name";
+    st[2] = "location";
+    st[3] = "model";
+    IEnumerable<string> ie = st;
+    string snlist = "";
+    bool admin = Convert.ToBoolean(ViewData["admin"]);
+}
+
+    <script>
+    //var snlist1 = "13132";
+
+    function Showfilter() {
+        var sorttable = document.getElementById("sorting");
+        document.getElementById("showhide").style["display"] = "none";
+        sorttable.style.display = "table";
+    }
+
+     function Newtask() {
+         var lists1 = "NewTask?sn=" + document.getElementById("snlists").value;
+         if (lists1.length > 1) {
+             if (confirm('Attention! New task will be created for each displayed item. Do you want to continue?')) {
+                 window.location.href = lists1;
+             }
+         } else {
+             alert("There are no displayed items to create new task for.");
+         }
+     }
+
+    function Applyfilter() {
+        var filter = document.getElementById("filter_cond").selectedIndex;
+        var text = document.getElementById("filter_text").value;
+        var sort = "";
+        if (filter > 0) {
+            if (text == "") {
+                alert("Filter condition should not be empty");
+            } else {
+                sort = "Clients?filter=" + filter + text;
+                window.location.href = sort;
+            }
+        } else {
+            sort = "Clients";
+            window.location.href = sort;
+        }
+    }
+
+    </script>
+
+<h1>Clients</h1>
+
+<a href="~/Admin/NewClient" class="btn btn-outline-info" role="button">New client</a>
+<button type="button" class="btn btn-outline-info" onclick="Newtask()">New multiclient task</button>
+<button type="button" id="showhide" class="btn btn-outline-info" onclick="Showfilter()">Show filter</button>
+
+<table class="table" id="sorting" style="display: none;" align="left">
+    <thead>
+        <tr>
+            <th>
+                <label>Sort by</label>
+            </th>
+            <th>
+                <label>Filter string</label>
+            </th>
+            <th>
+            </th>
+            <th>
+            </th>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.DropDownList("filter_cond", new SelectList(ie, st[0]), null, new { @class = "form-control" })
+            </td>
+            <td>
+                @Html.TextBox("filter_text")
+            </td>
+            <td>
+                <button type="button" class="btn btn-outline-info" onclick="Applyfilter()">Apply filter</button>
+            </td>
+            <td>
+                
+            </td>
+        </tr>
+
+</table>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.hostname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.sn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.model)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.mac)
+            </th>
+            @if (admin == true)
+            {
+                <th>
+                    @Html.DisplayNameFor(model => model.customer_id)
+                </th>
+            }
+                <th>
+                    @Html.DisplayNameFor(model => model.lastseenonline)
+                </th>
+            </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            snlist = snlist + ":" + item.sn;
+
+        <tr>
+            <td>
+                <a href="~/Admin/Client?id=@item.sn">@item.hostname</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.sn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.model)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.mac)
+            </td>
+            @if (admin == true)
+            {
+                <td>
+
+                    @Html.DisplayFor(modelItem => item.customer_id)
+                </td>
+            }
+                <td>
+                    @Html.DisplayFor(modelItem => item.lastseenonline)
+                </td>
+            </tr>
+        }
+    <div style="display: none;">
+        @Html.TextArea("snlists",@snlist)
+    </div>
+</tbody>
+</table>

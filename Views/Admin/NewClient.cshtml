@@ -1,0 +1,177 @@
+﻿@model AdminPortal.Models.Client
+
+@{
+    ViewData["Title"] = "Provision new client";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    bool admin = Convert.ToBoolean(ViewData["admin"]);
+    int template_id = Convert.ToInt32(ViewData["template"]);
+    bool list0 = false;
+    bool list1 = false;
+    bool list2 = false;
+    if (template_id == 0) list0 = true;
+    if (template_id == 1) list1 = true;
+    if (template_id == 2) list2 = true;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>NewClient</title>
+</head>
+<body>
+
+<script>
+    function onlistchange() {
+        var template = document.getElementById("templates").selectedIndex;
+        updlink = "NewClient?template=" + template;
+        window.location.href = updlink;
+    }
+
+</script>
+
+<h4>Client</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="type">Select template:</label>
+            @Html.DropDownList("templates", new SelectListItem[] {
+             new SelectListItem() { Text = "Linux client", Value = "0",Selected=list0 },
+             new SelectListItem() { Text = "Openwrt client", Value = "1",Selected=list1 },
+             new SelectListItem() { Text = "Windows client", Value = "2",Selected=list2 } },
+                new { onchange = @"onlistchange();" })
+        </div>
+        <form asp-controller="Admin" asp-action="NewClient" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="hostname" class="control-label">Device name</label>
+                <input asp-for="hostname" class="form-control" />
+                <span asp-validation-for="hostname" class="text-danger"></span>
+            </div>
+            <a href="~/Admin/GetFile?filename=get_device_id.py" class="col-form-label">Download python script to get device ID and mac-address</a>
+            <div class="form-group">
+                <label asp-for="sn" class="control-label">Device ID (get from script)</label>
+                <input asp-for="sn" class="form-control" />
+                <span asp-validation-for="sn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="mac" class="control-label"></label>
+                <input asp-for="mac" class="form-control" />
+                <span asp-validation-for="mac" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="model" class="control-label"></label>
+                <input asp-for="model" class="form-control" />
+                <span asp-validation-for="model" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="location" class="control-label"></label>
+                <input asp-for="location" class="form-control" />
+                <span asp-validation-for="location" class="text-danger"></span>
+            </div>
+            @if (admin == true)
+            {
+                <div class="form-group">
+                    <label asp-for="customer_id" class="control-label"></label>
+                    <input asp-for="customer_id" class="form-control" />
+                    <span asp-validation-for="customer_id" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="provisioned" class="control-label"></label>
+                    <input asp-for="provisioned" class="form-control" />
+                    <span asp-validation-for="provisioned" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ssh_command" class="control-label"></label>
+                    <input asp-for="ssh_command" class="form-control" />
+                    <span asp-validation-for="ssh_command" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="type" class="control-label"></label>
+                    <input asp-for="type" class="form-control" />
+                    <span asp-validation-for="type" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group" style="display: none;">
+                    <label asp-for="customer_id" class="control-label"></label>
+                    <input asp-for="customer_id" class="form-control" />
+                    <span asp-validation-for="customer_id" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="display: none;">
+                    <label asp-for="provisioned" class="control-label"></label>
+                    <input asp-for="provisioned" class="form-control" />
+                    <span asp-validation-for="provisioned" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="display: none;">
+                    <label asp-for="ssh_command" class="control-label"></label>
+                    <input asp-for="ssh_command" class="form-control" />
+                    <span asp-validation-for="ssh_command" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="display: none;">
+                    <label asp-for="type" class="control-label" ></label>
+                    <input asp-for="type" class="form-control" />
+                    <span asp-validation-for="type" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="servapi_host" class="control-label"></label>
+                <input asp-for="servapi_host" class="form-control" />
+                <span asp-validation-for="servapi_host" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="servapi_port" class="control-label"></label>
+                <input asp-for="servapi_port" class="form-control" />
+                <span asp-validation-for="servapi_port" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="display: none;">
+                <label asp-for="status" class="control-label"></label>
+                <input asp-for="status" class="form-control" />
+                <span asp-validation-for="status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ssh_enabled" class="control-label">SSH tunneling (yes/no/auto)</label>
+                <input asp-for="ssh_enabled" class="form-control" />
+                <span asp-validation-for="ssh_enabled" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="client_update_freq" class="control-label"></label>
+                <input asp-for="client_update_freq" class="form-control" />
+                <span asp-validation-for="client_update_freq" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="program_update_freq" class="control-label"></label>
+                <input asp-for="program_update_freq" class="form-control" />
+                <span asp-validation-for="program_update_freq" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="client_version" class="control-label"></label>
+                <input asp-for="client_version" class="form-control" />
+                <span asp-validation-for="client_version" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="program_dir" class="control-label"></label>
+                <input asp-for="program_dir" class="form-control" />
+                <span asp-validation-for="program_dir" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="display: none;">
+                <label asp-for="public_key" class="control-label"></label>
+                <input asp-for="public_key" class="form-control" />
+                <span asp-validation-for="public_key" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a href="~/Admin/Clients">Back</a>
+</div>
+
+</body>
+</html>

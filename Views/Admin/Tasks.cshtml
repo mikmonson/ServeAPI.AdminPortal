@@ -1,0 +1,133 @@
+﻿@model IEnumerable<AdminPortal.Models.ClientTask>
+
+@{
+    ViewData["Title"] = "Tasks";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Tasks</title>
+</head>
+<body>
+    <h3>@ViewData["logo"]</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.timestamp)
+                </th>
+                <th>
+                    Device name
+                </th>
+                <th>
+                    Device ID
+                </th>
+                <th>
+                    Action
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.status)
+                </th>
+                <th>
+                    Files
+                </th>
+                <th>
+                    Commands
+                </th>
+                <th>Info</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                string ref1 = null;
+                string ref2 = null;
+                string ref4 = "";
+                if (item.client_log_id > 0) ref1 = "Log?taskid=" + item.id;
+                if (item.result_file > 0) ref2 = "Data?id=" + item.result_file;
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.timestamp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item._not_exported_hostname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.sn)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item._type_simple)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item._commands)
+                    @if (item._files != null)
+                        {
+                    @foreach (var m in item._files._files)
+                            {
+                                if (m != null)
+                                {
+                                    string ref_5 = "Data?id=" + m.content_index;
+                    <a href=@ref_5>@m.file_name</a>
+                                }
+                                if (item.direction == 1)
+                                {<p> Target path: @item._files.location</p>}
+                        }
+                        }
+                </td>
+                <td>
+                    @if (item._commands != null)
+                        {
+                    @foreach (var m in item._commands._commands)
+                            {
+                                if (m != null) ref4 = ref4 + m.command + " ";
+                            }
+                        }
+                    @ref4
+                </td>
+                <td>
+                    @if (ref1 != null)
+                        {
+                    <a href=@ref1>Log</a>
+                        }
+                    @if (ref2 != null)
+                        {
+                    <a href=@ref2>Result</a>
+                        }
+                </td>
+                <td>
+                    @if ((item.status != "completed") && (item.status != "canceled"))
+                        {
+                            if ((item.direction == 2) && (item.status == "pending")) // for upload we call it "acknowledge"
+                            {
+                    <a asp-action="Cancel" asp-route-id="@item.id">Acknowledge</a>
+                            }
+                            else
+                            {
+                    <a asp-action="Cancel" asp-route-id="@item.id">Cancel</a>
+                            }
+                        }
+                        else if ((item.status == "canceled") || (item.status == "completed"))
+                        {
+                    <a href="~/Admin/Delete?task_id=@item.id">Delete</a>
+                        }
+                </td>
+
+
+            </tr>
+            }
+
+
+        </tbody>
+    </table>
+</body>
+</html>

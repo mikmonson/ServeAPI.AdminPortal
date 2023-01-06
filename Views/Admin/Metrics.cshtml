@@ -1,0 +1,76 @@
+﻿@model IEnumerable<AdminPortal.Models.ClientMetric>
+
+@{
+    ViewData["Title"] = "Metrics";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Metric</title>
+</head>
+<body>
+    <h4>@ViewData["logo"]</h4>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Device identifier
+                </th>
+                <th>
+                    Device uptime
+                </th>
+                <th>
+                    IP address
+                </th>
+                <th>
+                    Memory (%)
+                </th>
+                <th>
+                    CPU (%)
+                </th>
+                <th>
+                    Free disk space (MB)
+                </th>
+                <th>
+                    Last time online (sec)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.sn)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.uptime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.last_ip)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.memory)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.cpu)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.free_disk)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.lastseenonline)
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

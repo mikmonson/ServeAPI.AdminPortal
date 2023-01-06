@@ -1,0 +1,38 @@
+﻿@model IEnumerable<AdminPortal.Models.Client>
+@{
+    ViewData["Title"] = "List of EDGE CLients";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    int provclients = 0;
+    int actclients = 0;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Welcome to the Admin Portal</title>
+</head>
+<body>
+    <div class="jumbotron">
+        <h1>Welcome to the Admin Portal</h1>
+        <br>
+        <p>
+            You can provision and manage edge clients from here.<br>
+            <a href="~/Admin/Clients"><b>Clients</b></a> -> provision and manage edge clients<br>
+            <a href="~/Admin/Tasks"><b>Tasks</b></a> -> create and monitor tasks for your edge clients to pull/push data or execute commands<br>
+            <a href="~/Admin/Data"><b>Data</b></a> -> view files that were pulled from or pushed to edge clients<br>
+            <a href="~/Admin/Log"><b>Logs</b></a> -> view client logs (hello messages with health metrics, task updates, failure reports)<br>
+            <a href="~/Admin/Metrics"><b>Metrics</b></a> -> view health metrics of edge clients<br>
+            <br>
+            What is edge client? It's any device running edge client software which is communicating with the SERVAPI platform.<br>
+            This software is written in python and can be distributed as a script or stand-alone executable file.<br />
+            When you provision new edge client you get zip-archive with client software, certificates and settings which you ned to extract on the client device.
+            <br> When client is provisioned it starts communicating to the SERVAPI platform using periodic secure HTTPS session.
+            <br> You can create tasks to push some files to one or multiple clients or execute OS commands.
+            <br> If you device is running additional software it can exchange data with the SERVAPI platform through the edge client software.
+            <br> For more information refer to official documentation of the SERVAPI platform.
+
+        </p>
+    </div>
+
+</body>
+</html>

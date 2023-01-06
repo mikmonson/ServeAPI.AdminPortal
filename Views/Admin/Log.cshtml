@@ -1,0 +1,52 @@
+﻿@model IEnumerable<AdminPortal.Models.ClientLog>
+@{
+    ViewData["Title"] = "Logs";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Log</title>
+</head>
+<body>
+    <h3>@ViewData["logo"]</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <td><b>Timestamp</td>
+                <td><b>Device ID</td>
+                <td><b>Title</td>
+                <td><b>Message</td>
+                <td><b>Task related</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @{int lcount = 0;}
+            @foreach (var log in Model)
+            {
+                lcount = lcount + 1;
+              
+            <tr>
+                <td> @log.timestamp</td>
+                <td> @log.sn</td>
+                <td> @log.title</td>
+                <td> @log.message</td>
+                @if (log.clienttask_id > 0)
+                {
+                    <td> <a href="~/Admin/Tasks?id=@log.clienttask_id">Yes</a> </td>
+                }
+                else
+                {
+                    <td>No</td>
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>
